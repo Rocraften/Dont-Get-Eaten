@@ -273,7 +273,7 @@ def game_over():
     font = pygame.font.Font(None, 120)
     score_font = pygame.font.Font(None, 72)
     
-    text = font.render('Game Over! Dont forget to support the open source project on github.', True, RED)
+    text = font.render('Game Over!', True, RED)
     score_text = score_font.render(f'Score: {player_score}', True, WHITE)
     
     text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2 - 40))
