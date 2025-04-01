@@ -1,3 +1,5 @@
+# Made by Rocraften
+# Don't Get Eaten V2
 import pygame
 import random
 import sys
@@ -46,40 +48,71 @@ def draw_rounded_rect(surface, color, rect, radius):
 def draw_menu():
     for y in range(HEIGHT):
         color_value = int(255 * (1 - y/HEIGHT))
-        pygame.draw.line(WINDOW, (0, color_value//2, color_value), (0, y), (WIDTH, y))
+        pygame.draw.line(WINDOW, (color_value//8, 0, color_value//2), (0, y), (WIDTH, y))
     
+    # animated background elements
+    current_time = pygame.time.get_ticks()
+    for i in range(20):  # Add some stars/particles
+        x = (current_time // 20 + i * 40) % WIDTH
+        y = (i * 30 + current_time // 50) % HEIGHT
+        size = 2 + math.sin(current_time / 500 + i) * 2
+        pygame.draw.circle(WINDOW, (255, 255, 255), (x, y), size)
+    
+    # fonts
     title_font = pygame.font.Font(None, 120)
     button_font = pygame.font.Font(None, 72)
     
-    title = title_font.render("Don't Get Eaten!", True, NEON_BLUE)
-    title_shadow = title_font.render("Don't Get Eaten!", True, (0, 50, 100))
-    WINDOW.blit(title_shadow, (WIDTH//2 - title.get_width()//2 + 4, HEIGHT//4 + 4))
+    # title glow effect
+    glow_colors = [(0, 50, 100), (0, 70, 140), (0, 90, 180)]
+    title_text = "Don't Get Eaten!"
+    
+    for i, color in enumerate(glow_colors):
+        glow = title_font.render(title_text, True, color)
+        offset = 6 - i*2  # Decreasing offset for inner glow layers
+        WINDOW.blit(glow, (WIDTH//2 - glow.get_width()//2 + offset, HEIGHT//4 + offset))
+    
+    title = title_font.render(title_text, True, NEON_BLUE)
     WINDOW.blit(title, (WIDTH//2 - title.get_width()//2, HEIGHT//4))
     
+    # button design
     play_rect = pygame.Rect(WIDTH//2 - 150, HEIGHT//2, 300, 70)
     quit_rect = pygame.Rect(WIDTH//2 - 150, HEIGHT//2 + 100, 300, 70)
     
     for rect, text in [(play_rect, "Play Game"), (quit_rect, "Quit")]:
+        # Add button shadow
+        shadow_rect = rect.copy()
+        shadow_rect.x += 4
+        shadow_rect.y += 4
+        draw_rounded_rect(WINDOW, (20, 20, 30), shadow_rect, 20)
+        
         if rect.collidepoint(pygame.mouse.get_pos()):
-            draw_rounded_rect(WINDOW, NEON_BLUE, rect, 20)
+            # Animated highlight for hovered buttons
+            highlight = abs(math.sin(current_time * 0.005)) * 50 + 150
+            draw_rounded_rect(WINDOW, (0, highlight//3, highlight), rect, 20)
             text_color = WHITE
         else:
-            draw_rounded_rect(WINDOW, DARK_GRAY, rect, 20)
-            text_color = WHITE
+            draw_rounded_rect(WINDOW, (40, 40, 80), rect, 20)
+            text_color = (200, 200, 200)
+        
+        # Add button border
+        pygame.draw.rect(WINDOW, NEON_BLUE, rect, 2, border_radius=20)
             
         text_surf = button_font.render(text, True, text_color)
         WINDOW.blit(text_surf, (rect.centerx - text_surf.get_width()//2,
                                rect.centery - text_surf.get_height()//2))
     
+    # controls text with icon hints
     controls_font = pygame.font.Font(None, 48)
     controls_text = "Controls: Arrow Keys or WASD"
-    controls_surf = controls_font.render(controls_text, True, WHITE)
+    controls_surf = controls_font.render(controls_text, True, (180, 180, 220))
     WINDOW.blit(controls_surf, (WIDTH//2 - controls_surf.get_width()//2, HEIGHT - 80))
     
     if high_score > 0:
         score_font = pygame.font.Font(None, 56)
         score_text = f"High Score: {high_score}"
-        score_surf = score_font.render(score_text, True, GOLD)
+        # Add trophy icon or animation for high score
+        glow = abs(math.sin(current_time * 0.003)) * 55 + 200
+        score_surf = score_font.render(score_text, True, (glow, glow//1.5, 0))
         WINDOW.blit(score_surf, (WIDTH//2 - score_surf.get_width()//2, HEIGHT//4 + 80))
     
     return play_rect, quit_rect
@@ -91,7 +124,11 @@ def game_loop():
     clock = pygame.time.Clock()
     snake_segments = [(100, 100)]
     
+    # Add particle effects for player movement
+    particles = []
+    
     while running:
+        current_time = pygame.time.get_ticks()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -145,27 +182,85 @@ def game_loop():
             game_over()
             return True
 
-        WINDOW.fill(BLACK)
+        # Add player trail effect
+        if random.random() > 0.7:
+            particles.append([player_x + PLAYER_SIZE//2, player_y + PLAYER_SIZE//2, 
+                             random.randint(3, 8), (80, 180, 255), 30])
         
+        # Update particles
+        for particle in particles[:]:
+            particle[2] -= 0.2
+            particle[4] -= 1
+            if particle[2] <= 0 or particle[4] <= 0:
+                particles.remove(particle)
+        
+        # Draw background with subtle grid pattern
+        WINDOW.fill((10, 10, 20))
+        for x in range(0, WIDTH, 40):
+            for y in range(0, HEIGHT, 40):
+                pygame.draw.rect(WINDOW, (20, 20, 30), (x, y, 39, 39))
+        
+        # Draw particles
+        for particle in particles:
+            pygame.draw.circle(WINDOW, particle[3], (particle[0], particle[1]), particle[2])
+        
+        # Draw snake visuals
         for i, segment in enumerate(snake_segments):
             color_intensity = 255 - (i * (255 // max(1, len(snake_segments))))
             color_intensity = max(100, color_intensity)
+            
+            # Add glowing effect to snake head
+            if i == 0:
+                glow_size = 5 + math.sin(current_time * 0.01) * 2
+                pygame.draw.circle(WINDOW, (color_intensity//2, 0, 0), 
+                                 (segment[0] + SNAKE_SIZE//2, segment[1] + SNAKE_SIZE//2), 
+                                 SNAKE_SIZE//2 + glow_size)
+            
+            # Draw rounded snake segments
             pygame.draw.rect(WINDOW, (color_intensity, 0, 0), 
-                           (segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE))
+                           (segment[0], segment[1], SNAKE_SIZE, SNAKE_SIZE), 
+                           border_radius=8)
+            
+            # Add eyes to snake head
+            if i == 0:
+                eye_size = 4
+                pygame.draw.circle(WINDOW, WHITE, 
+                                 (segment[0] + SNAKE_SIZE//3, segment[1] + SNAKE_SIZE//3), 
+                                 eye_size)
+                pygame.draw.circle(WINDOW, WHITE, 
+                                 (segment[0] + SNAKE_SIZE*2//3, segment[1] + SNAKE_SIZE//3), 
+                                 eye_size)
         
-        pygame.draw.rect(WINDOW, NEON_BLUE, (player_x, player_y, PLAYER_SIZE, PLAYER_SIZE))
+        pygame.draw.rect(WINDOW, (0, 50, 100),
+                       (player_x-3, player_y-3, PLAYER_SIZE+6, PLAYER_SIZE+6),
+                       border_radius=10)
+        pygame.draw.rect(WINDOW, NEON_BLUE,
+                       (player_x, player_y, PLAYER_SIZE, PLAYER_SIZE),
+                       border_radius=8)
         
-        pulse = abs(math.sin(pygame.time.get_ticks() * 0.005)) * 3
-        pygame.draw.circle(WINDOW, GREEN, (food_x + FOOD_SIZE//2, food_y + FOOD_SIZE//2), FOOD_SIZE + pulse)
+        # food appearance
+        pulse = abs(math.sin(current_time * 0.005)) * 3
+        food_center = (food_x + FOOD_SIZE//2, food_y + FOOD_SIZE//2)
         
+        # Outer glow
+        pygame.draw.circle(WINDOW, (0, 100, 0), food_center, FOOD_SIZE + pulse + 5)
+        # Inner circle
+        pygame.draw.circle(WINDOW, GREEN, food_center, FOOD_SIZE + pulse)
+        # Highlight
+        pygame.draw.circle(WINDOW, (200, 255, 200), 
+                         (food_center[0]-FOOD_SIZE//4, food_center[1]-FOOD_SIZE//4), 
+                         FOOD_SIZE//4)
+        
+        # score display
         score_font = pygame.font.Font(None, 56)
         score_text = f'Score: {player_score}'
         score_surface = score_font.render(score_text, True, WHITE)
+        score_bg = pygame.Rect(20, 15, score_surface.get_width() + 30, 60)
+        draw_rounded_rect(WINDOW, (0, 0, 0, 150), score_bg, 10)
         WINDOW.blit(score_surface, (35, 25))
 
         pygame.display.flip()
         clock.tick(60)
-
 def game_over():
     fade_surface = pygame.Surface((WIDTH, HEIGHT))
     fade_surface.fill(BLACK)
@@ -178,7 +273,7 @@ def game_over():
     font = pygame.font.Font(None, 120)
     score_font = pygame.font.Font(None, 72)
     
-    text = font.render('Game Over!', True, RED)
+    text = font.render('Game Over! Dont forget to support the open source project on github.', True, RED)
     score_text = score_font.render(f'Score: {player_score}', True, WHITE)
     
     text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2 - 40))
