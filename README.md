@@ -4,19 +4,19 @@
 
 ## Features
 
-- **Smart Snake AI:** The snake adapts to your movements, keeping you on your toes.
+1. **Smart Snake AI:** The snake adapts to your movements, keeping you on your toes.
 ![Smart Snake AI](https://cdn.discordapp.com/attachments/1298156329856274512/1359960088403644557/image.png?ex=67f96107&is=67f80f87&hm=0f2a20c1d59a1084b396249d12a80df2ed2e6a95a19882548717ee1ffd7c28ae&)
 
-- **Player Movement System:** Smooth and responsive controls for an engaging gameplay experience.
+2. **Player Movement System:** Smooth and responsive controls for an engaging gameplay experience.
 ![Movement System](https://cdn.discordapp.com/attachments/1298156329856274512/1359959174980571406/image.png?ex=67f9602e&is=67f80eae&hm=40f7ee2e1b82fd77bb3b36e242cb9659145b481e88a438039f8c33f8ea06ef0d&)
 
-- **Dynamic Animations:** Features fluid animations crafted purely with Python—no images required.
+3. **Dynamic Animations:** Features fluid animations crafted purely with Python—no images required.
 ![Anim](https://cdn.discordapp.com/attachments/1298156329856274512/1359957662741303306/image.png?ex=67f95ec5&is=67f80d45&hm=2588b5b1b00338fc08c7c107420a0873baf8133eaf9026367f79df42c6b9d911&)
 
-- **Menu System:** A user-friendly menu for seamless navigation and gameplay setup.
+4. **Menu System:** A user-friendly menu for seamless navigation and gameplay setup.
 ![Menu System](https://cdn.discordapp.com/attachments/1298156329856274512/1359951595835490504/image.png?ex=67f9591f&is=67f8079f&hm=146e752bcc06f05eb2f3098d3d8f968b34e0f1577a5726890e2a0d42d03db298&)
 
-- **Score System:** Track your progress and challenge yourself to beat your high score.
+5. **Score System:** Track your progress and challenge yourself to beat your high score.
 ![Score System](https://cdn.discordapp.com/attachments/1298156329856274512/1359958054736629840/image.png?ex=67f95f23&is=67f80da3&hm=49e7b52caae6b3b85d47d72ced11e2e880befdc350d284c76c6d96f2f39feb21&)
 
 ## Why Choose Don't Get Eaten?
