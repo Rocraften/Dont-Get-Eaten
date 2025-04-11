@@ -1,4 +1,7 @@
 # Don't Get Eaten 🐍
+![GitHub Created At](https://img.shields.io/github/created-at/Rocraften/Dont-Get-Eaten?style=for-the-badge&logo=github&label=Created) ![GitHub Repo stars](https://img.shields.io/github/stars/Rocraften/Dont-Get-Eaten?style=for-the-badge&logo=githubsponsors&logoColor=yellow&label=Stars&color=yellow) ![Discord](https://img.shields.io/discord/1296130890929405974?style=for-the-badge&logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2F9zzE72bEfT)
+
+
 
 **Don't Get Eaten** is a thrilling, minimalist game coded entirely in Python, where players must outmaneuver a smart AI-driven snake to achieve the highest score possible. With every point you earn, the snake grows larger and becomes an even bigger threat! Think fast, move strategically, and test your reflexes in this adrenaline-pumping chase.
 
